@@ -6,7 +6,7 @@
 
   - SolaX G2 & SolaX G3 Hybrids have built in Ethernet (The Qcells Q.VOLT HYB-G3-3P is a SolaX G4 despite the G3 naming).
   - SolaX G4 and other don't have built-in Ethernet, communication is possible via serial RS485 COM port.
-    - SolaX only - SolaX dongles do not provide modbus communication, the only exception is [PocketWiFi 3.0](#solax-pocketwifi-30).
+    - SolaX only - Not all SolaX dongles provide modbus communication, the minimum supported PocketWiFi is [PocketWiFi 3.0](#solax-pocketwifi-30) PocketLAN does not provide a Modbus connection.
     - [RS485 to Ethernet adapter](#waveshare-rs485-to-eth-b) - the best way to connect to your inverter.
     - [RS485 to USB adapter](#usb-to-rs485-adaptor) - not recommended, can cause errors in HA.
     - Solis dongle - see below
@@ -54,10 +54,6 @@ DO NOT CONNECT THIS COM PORT TO AN ETHERNET SWITCH - your Ethernet switch port w
 When configuring the SolaX Modbus integration, specify the network IP address of the Waveshare device, not the address of the SolaX.
 Do not tick the Serial RS485 flag; the serial port is ignored in this setup.
 
-### Multiple inverters connected to one Waveshare adapter
-
-It should be possible to connect multiple inverters to the same Waveshare adapter. The inverters must have different Modbus addresses, so you need to change the Modbus addresses of the inverters first. Then you need to delete your SolaX integration(s) and re-install one instance for each inverter. The configuration dialogue allows you to set the Modbus address.
-
 ## USB to RS485 adaptor
 
 ![USB to RS485 adaptor scheme](images/adaptor-rs485-usb-scheme.png)
@@ -68,6 +64,11 @@ It should be possible to connect multiple inverters to the same Waveshare adapte
 
 When configuring the SolaX Modbus Integration, tick the 'RS485 serial port' flag, and specify the actual serial port name  (as seen in the output of 'ls /dev/ttyUSB*'). In case you have more than one usb device, it makes sense to use the name seen in the output of 'ls /dev/serial/by-id'. In this setup, the IP address and TCP port do not matter, use 'localhost' as IP address and leave the TCP port default 502.
 
+## Multiple inverters connected to one RS485 adaptor & Terminating resistors
+
+It should be possible to connect multiple inverters to the same RS485 adapter (eg Waveshare). The inverters must have different Modbus addresses, so you need to change the Modbus addresses of the inverters first. Then configure one instance for each inverter. The configuration dialogue allows you to set the Modbus address.
+
+The use of Terminating resistors is required when connecting multiple Inverters. Place a 120Ohm resistor accross A&B at the RS485 adaptor and place a 120Ohm resistor accross A&B on the last connected Inverter.
 
 ## SolaX PocketWiFi 3.0
 
@@ -87,7 +88,7 @@ The integration could rely on the Modbus TCP supported by some Solis dataloggers
 - `DLS-W` - **not compatible** - an obsolete datalogger - you should search for SolarMan-based integrations.
 - `S3-WIFI-ST` - **not compatible** - a newer model - works with the Solis Cloud only.
 - You could connect your inverter using any of the [Compatible RS485 Adaptors](https://github.com/wills106/homeassistant-solax-modbus/wiki/Compatible-RS485-Adaptors) when combined with the female plug `Exceedconn EC04681-2023-BF` - as there is no datalogger, there will be no Solis Cloud **(*)** reporting.
-- A combined method of Solis Cloud and Home Assistant using [any Datalogger](https://github.com/alienatedsec/solis-ha-modbus-cloud#supported-solis-dataloggers) as well as wiring, and how to connect and configure Waveshare devices to work with this integration are described in detail at https://github.com/alienatedsec/solis-ha-modbus-cloud
+- A combined method of Solis Cloud and Home Assistant using [any Datalogger](https://github.com/alienatedsec/solis-ha-modbus-cloud#supported-solis-dataloggers) as well as wiring, and how to connect and configure Waveshare devices to work with this integration are described in detail at [https://github.com/alienatedsec/solis-ha-modbus-cloud](https://github.com/alienatedsec/solis-ha-modbus-cloud)
 
 **(*) Disconnecting Solis Cloud is to prevent Solis engineers and your installer to support and monitor your PV installation.**
 
